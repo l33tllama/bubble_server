@@ -6,7 +6,7 @@ function parseData(data) {
 
 			var lines = data.split('\n');
 			
-			console.log()
+//			console.log()
 			for(var line = 0; line < lines.length; line++){
 				
 				if(line === 1) {
