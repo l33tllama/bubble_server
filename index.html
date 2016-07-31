@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="A layout example that shows off a responsive product landing page.">
+
+    <title>Air Bubble &ndash; Govhack</title>
+
+    
+
+
+<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+
+
+
+<!--[if lte IE 8]>
+  
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-old-ie-min.css">
+  
+<![endif]-->
+<!--[if gt IE 8]><!-->
+  
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css">
+  
+<!--<![endif]-->
+
+
+
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+
+
+
+  
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" href="css/layouts/marketing-old-ie.css">
+    <![endif]-->
+    <!--[if gt IE 8]><!-->
+        <link rel="stylesheet" href="css/layouts/marketing.css">
+    <!--<![endif]-->
+  
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script>
+        $(document).ready(function (){
+            $("#click").click(function (){
+                $('html, body').animate({
+                    scrollTop: $("#div1").offset().top
+                }, 2000);
+            });
+        });
+    </script>
+    
+
+</head>
+<body>
+
+
+
+
+
+
+
+
+<a name="home"></a>
+<div class="header">
+    <div class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
+        <a class="pure-menu-heading" href="">Air Bubble</a>
+
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item pure-menu-selected"><a href="#home" class="pure-menu-link">Home</a></li>
+            <li class="pure-menu-item"><a href="#map" class="pure-menu-link">Map</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="splash-container">
+    <div class="splash">
+        <h1 class="splash-head">Air Bubble</h1>
+        <p class="splash-subhead">
+            Your air quality translated from scientific giberish into bubbles!
+        </p>
+        <p>
+        
+        <form class="pure-form">
+                <fieldset>
+                <div class="pure-u-1-4">
+                <input id="postcodesubmitbox" type="text" placeholder="Your postcode">
+        		</div>
+                <br/>
+                <button id="click" type="submit" class="pure-button" onClick="">Submit</button>
+            </fieldset>
+        </form>
+            
+        </p>
+    </div>
+</div>
+
+
+
+<a name="map"></a>
+<div class="content-wrapper">
+    <div  class="content" >
+        <h2 class="content-head is-center">Your closest air monitoring station</h2>
+        
+        <iframe src=				"https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d10987.041222182086!2d147.3334980226362!3d-42.88192149291969!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sau!4v1469860718783" width="400" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>
+		<p>
+        	The more bubbles, the cleaner the air. Less bubbles, means more particulates. Particulates measured here are PM2.5 ug/m³
+            </p>
+            
+        <div class="pure-g">
+            <div class="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
+            
+			
+            
+            
+            
+            </div>
+        </div>
+    </div>
+<!--
+    <div class="ribbon l-box-lrg pure-g">
+        <div class="l-box-lrg is-center pure-u-1 pure-u-md-1-2 pure-u-lg-2-5">
+            <img class="pure-img-responsive" alt="File Icons" width="300" src="img/common/file-icons.png">
+        </div>
+        <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-3-5">
+
+            <h2 class="content-head content-head-ribbon">Laboris nisi ut aliquip.</h2>
+
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat. Duis aute irure dolor.
+            </p>
+        </div>
+    </div>
+
+    <div class="content">
+        <h2 class="content-head is-center">Dolore magna aliqua. Uis aute irure.</h2>
+
+        <div class="pure-g">
+            <div class="l-box-lrg pure-u-1 pure-u-md-2-5">
+                <form class="pure-form pure-form-stacked">
+                    <fieldset>
+
+                        <label for="name">Your Name</label>
+                        <input id="name" type="text" placeholder="Your Name">
+
+
+                        <label for="email">Your Email</label>
+                        <input id="email" type="email" placeholder="Your Email">
+
+                        <label for="password">Your Password</label>
+                        <input id="password" type="password" placeholder="Your Password">
+
+                        <button type="submit" class="pure-button">Sign Up</button>
+                    </fieldset>
+                </form>
+            </div>
+
+            <div class="l-box-lrg pure-u-1 pure-u-md-3-5">
+                <h4>Contact Us</h4>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                    consequat.
+                </p>
+
+                <h4>More Information</h4>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                    tempor incididunt ut labore et dolore magna aliqua.
+                </p>
+            </div>
+        </div>
+
+    </div>-->
+
+    <div id="div1" class="footer l-box is-center">
+        Team Leo and Sons - Govhack 2016
+    </div>
+
+</div>
+
+
+
+
+
+
+</body>
+</html>
