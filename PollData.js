@@ -1,10 +1,15 @@
-function pollData(interval) {
-	interval = interval*1000
+/**
+* sets a promise to be resolved after a certain time period
+* @param {number} interval - Time interval in minutes
+* @return {object} promise
+*/
+function setAsyncTimer(interval) {
+	interval = interval*60000
 	var promise = new Promise(
-		function(fulfill,reject) {
+		function executor(resolve,reject) {
 			setTimeout(
 				function() {
-					fulfill();
+					resolve();
 				},
 				interval
 			);			
@@ -13,4 +18,4 @@ function pollData(interval) {
 	return promise;
 }
 
-module.exports = pollData;
+module.exports = setAsyncTimer;

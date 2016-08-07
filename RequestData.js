@@ -2,19 +2,16 @@ var request = require('request');
 
 function requestData(requestUrl) {
 	promise = new Promise( 
-		function(fulfill, reject) {
+		function executor(resolve, reject) {
 			request(requestUrl,	
 				function(error, response, body) {
-					if (!error && response.statusCode == 200) {
-						fulfill(body);		
-					} else {
-						reject();
-					}
+					resolve(body);
+					reject(error);
 				}
 			);
-	});
+		}
+	);
 	return promise;
 }
-
 
 module.exports = requestData;

@@ -6,7 +6,7 @@ function parseData(data) {
 
 			var lines = data.split('\n');
 			
-//			console.log()
+
 			for(var line = 0; line < lines.length; line++){
 				
 				if(line === 1) {
@@ -42,12 +42,24 @@ function parseData(data) {
 
 				parsedResults.push(currentStation);
 			}
+			
+			//Process integer timeStamp in to a javascript Date object.
+			var temp = timeStamp.toString();
+			var year = +temp.slice(0,4);
+			var month = +temp.slice(4,6)-1;
+			var day = +temp.slice(6,8);
+			var hour = +temp.slice(8,10);
+			var min = +temp.slice(10,12);
+			var sec = +temp.slice(12,14);
+			
+			timeStamp = new Date(year,month,day,hour,min,sec);
+
 			//Return the unique timestamp number
 			parsedResults = [timeStamp, parsedResults];
 		fulfill(parsedResults);
 	}
 	);
-	console.log("bottom");
+
 	return promise;
 }
 
