@@ -74,6 +74,7 @@ var Mongo = {
 		 *	@return {object} Promise
 		 */		
 		findOne = function(dbObject, collectionName, queryObject) {
+			
 			var prom = new Promise(
 				function executor(resolve, reject) {
 					var collection = dbObject.collection(collectionName);
