@@ -46,7 +46,7 @@ createDbConnection();
 var requestDataPromise= function(){
 	requestData(dataUrl).then(
 		function resolve(data) {
-			console.log(data);
+	
 			if( data === null) {
 				//Don't proceed further - scheduler will try again next time!
 				return;
@@ -87,7 +87,6 @@ var checkTimestampPromise = function() {
 	mongo.findOne(dbConnection, 'timestamps', {}).then(
 			
 		function resolve(latestTimestamp) {
-			console.log('In checkTimestampPromise');
 
 			if (latestTimestamp === null) {
 				//Something went wrong! Mongodb automatically attempts restarts.
@@ -98,7 +97,7 @@ var checkTimestampPromise = function() {
 				//Go no further - the database is up-to-date! Scheduler will check again next time!
 				return;
 			}
-			console.log('Got to this point');
+
 			//Insert latest data in to database.
 			insertTimestampPromise();
 		},
@@ -148,6 +147,7 @@ var insertAirDataPromise = function(airQualData) {
 		function resolve(airQualSuccess) {
 			console.log("Successfully finished operation");
 //			console.log("New reading id inserted: " + airQualSuccess['insertedIds']);
+			//Insert web socket code here
 			return;
 		},
 		function reject(error) {
