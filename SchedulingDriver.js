@@ -12,6 +12,8 @@ const dbUrl = 'mongodb://localhost:27017/airquality';
 var dbConnection;
 var dbDataToInsert =[undefined,undefined];
 var task;
+
+var firstTime = true;
 //Set to poll the data every 5 minutes.
 const timeSchedule = " */5 * * * *";
 
@@ -88,6 +90,12 @@ var checkTimestampPromise = function() {
 			
 		function resolve(latestTimestamp) {
 
+			if(firstTime) {
+				//Set it to 1st jan 1970 if first time round
+				var epoch0 = new Date(0);
+				latestTimestamp = {'most_recent' : epoch0}
+			}
+			
 			if (latestTimestamp === null) {
 				//Something went wrong! Mongodb automatically attempts restarts.
 				return;
