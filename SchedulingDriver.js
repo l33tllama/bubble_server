@@ -89,7 +89,7 @@ var checkTimestampPromise = function() {
 	mongo.findOne(dbConnection, 'timestamps', {}).then(
 			
 		function resolve(latestTimestamp) {
-
+			console.log("Latest time stamp: " + latestTimeStamp);
 			if(firstTime) {
 				//Set it to 1st jan 1970 if first time round
 				var epoch0 = new Date(0);
@@ -154,7 +154,7 @@ var insertAirDataPromise = function(airQualData) {
 	mongo.insert(dbConnection,'readings', airQualData).then(
 		function resolve(airQualSuccess) {
 			console.log("Successfully finished operation");
-//			console.log("New reading id inserted: " + airQualSuccess['insertedIds']);
+			console.log("New reading id inserted: " + airQualSuccess['insertedIds']);
 			//Insert web socket code here
 			return;
 		},
