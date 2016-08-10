@@ -53,6 +53,8 @@ function parseData(data) {
 			var sec = +temp.slice(12,14);
 			
 			timeStamp = new Date(year,month,day,hour,min,sec);
+			//Force server to record the timestamp as correct UTC time
+			timeStamp.setHours(timeStamp.getHours() - 14);
 
 			//Return the unique timestamp number
 			parsedResults = [timeStamp, parsedResults];
