@@ -13,7 +13,7 @@ var Mongo = {
 		var connect = function(dbUrl) {
 			var prom = new Promise(
 				function executor(resolve, reject) {
-					MongoClient.connect('mongodb://localhost:27017/myproject', function(err, db) {
+					MongoClient.connect(dbUrl, function(err, db) {
 						resolve(db);
 						reject(err);
 					});
@@ -74,16 +74,18 @@ var Mongo = {
 		 *	@return {object} Promise
 		 */		
 		findOne = function(dbObject, collectionName, queryObject) {
-			
+			console.log(collectionName);
 			var prom = new Promise(
 				function executor(resolve, reject) {
+					
 					var collection = dbObject.collection(collectionName);
+					
 					collection.findOne(queryObject,{sort: [['_id', -1]]},
 					
-					function(error,result) {
-						resolve(result);
-						reject(error);
-					}				  
+						function(error,result) {
+							resolve(result);
+							reject(error);
+						}		  
 					);
 				}
 			);

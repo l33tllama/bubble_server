@@ -22,7 +22,6 @@ var createDbConnection = function() {
 		function resolve(dbObject) {
 			dbConnection = dbObject;
 
-			
 			//Start the scheduler to fetch, parse and insert airquality data in to the db
 			schedule.scheduleJob(timeSchedule, requestDataPromise);
 		},
@@ -48,7 +47,6 @@ createDbConnection();
 var requestDataPromise= function(){
 	requestData(dataUrl).then(
 		function resolve(data) {
-	
 			if( data === null) {
 				//Don't proceed further - scheduler will try again next time!
 				return;
@@ -66,7 +64,8 @@ var requestDataPromise= function(){
 var parsePromise = function(data) {
 					
 	parseData(data).then(
-		function resolve(parsedData) {	
+		function resolve(parsedData) {
+
 			if (parsedData === null) {
 				//scheduler will try again later
 				return;
@@ -85,19 +84,23 @@ var parsePromise = function(data) {
 }
 
 var checkTimestampPromise = function() {
+	
 	//Get most recent data timestamp from the database
-	mongo.findOne(dbConnection, 'timestamps', {}).then(
+	var query = {'most_recent' : { $exists: true} };
+	mongo.findOne(dbConnection, 'timestamps', query).then(
 			
 		function resolve(latestTimestamp) {
-			console.log("Latest time stamp: " + latestTimeStamp);
-			if(firstTime) {
-				//Set it to 1st jan 1970 if first time round
+
+			//Condition where no timestamp data in database.
+			if( (latestTimestamp === null) && firstTime) {
+				//Set it to 1st jan 1970 as some dummy data for the comparison below
 				var epoch0 = new Date(0);
-				latestTimestamp = {'most_recent' : epoch0}
+				latestTimestamp = {'most_recent' : epoch0};
+				firstTime = false;
 			}
 			
 			if (latestTimestamp === null) {
-				//Something went wrong! Mongodb automatically attempts restarts.
+				//Something went wrong! Mongodb automatically attempts restarts. Try again next time. Exception not caught.
 				return;
 			}
 
@@ -154,7 +157,7 @@ var insertAirDataPromise = function(airQualData) {
 	mongo.insert(dbConnection,'readings', airQualData).then(
 		function resolve(airQualSuccess) {
 			console.log("Successfully finished operation");
-			console.log("New reading id inserted: " + airQualSuccess['insertedIds']);
+//			console.log("New reading id inserted: " + airQualSuccess['insertedIds']);
 			//Insert web socket code here
 			return;
 		},
