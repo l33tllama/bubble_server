@@ -16,19 +16,42 @@ var createDbConnection = function() {
 	mongo.connect(dbUrl).then(
 		function resolve(dbObject) {
 			dbConnection = dbObject;
-
+			console.log('Yo!');
 			//Start the scheduler to fetch, parse and insert airquality data in to the db
 //			schedule.scheduleJob(timeSchedule, requestDataPromise);
-			var query = {'most_recent' : { $exists: true} };
-			mongo.findOne(dbConnection, 'timestamps', query).then(
-				function success(value) {
-					console.log("Success: " + value);
-					console.log(value[1]);
+			var timestampQuery = {'most_recent' : { $exists: true} };
+			
+			
+			mongo.findOne(dbConnection, 'timestamps', timestampQuery).then(
+				function success(mostRecent) {
+					console.log('Here in findOne');
+					//console.log(mostRecent["_id"]);
+					
+					var readingsQuery = {"timestamp_id" : mostRecent["_id"]};
+					mongo.find(dbConnection, 'readings', readingsQuery).then(
+						
+						function success(cursor) {
+							console.log("Success");
+							var array = [];
+							cursor.forEach(
+								
+								function(doc) {
+									console.log(doc);
+									array.push(doc);
+								}
+							);
+							//
+						},
+						function fail(result) {
+							console.log('Failure');
+							console.log(result);
+						}
+					);
 				},
 				function failure(value) {
 					console.log("Failure: " + value);
 				}
-			);
+			);	
 		},
 		function reject(error) {
 			console.log('DB connection error');

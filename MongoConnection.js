@@ -90,13 +90,32 @@ var Mongo = {
 				}
 			);
 			return prom;
+		},
+			
+		find = function(dbObject, collectionName, queryObject) {
+			console.log(collectionName);
+			var prom = new Promise(
+				function executor(resolve, reject) {
+					
+					var collection = dbObject.collection(collectionName);
+					
+					collection.find( queryObject,
+						function(error,result) {
+							resolve(result);
+							reject(error);
+						}		  
+					);
+				}
+			);
+			return prom;
 		};
 		
 		return {
 			connect: connect,
 			close: close,
 			insert: insert,
-			findOne: findOne
+			findOne: findOne,
+			find: find
 		};
 
 	} //Promises
