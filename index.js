@@ -170,6 +170,9 @@ io.on('connection', function (socket) {
   		console.log("Machine is ready? " + data);
   		machineReady = data;
 	});
+	socket.on("machine-active", function(data){
+		socket.emit("web-machine-active", data);
+	})
 });
 
 io.on('disconnect', function(){

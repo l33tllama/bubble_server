@@ -257,7 +257,7 @@
 	  			connStatEl.innerHTML = "Connected!";
 	  		});
 
-	  		socket.on("machine-active", function(data){
+	  		socket.on("web-machine-active", function(data){
 	  			var reqPostcode = data.requestPostcode;
 	  			
 	  			resMachinePostcode.innerHTML = reqPostcode;
