@@ -59,7 +59,7 @@ app.use(express.static('css/layouts'));
 app.use(express.static('img'));
 
 var viewsPath = "/views/";
-var serverPort = 3000;
+var serverPort = 80;
 
 server.listen(serverPort, function(){
 	console.log("Server listening on port " + serverPort);
