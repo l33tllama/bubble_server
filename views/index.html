@@ -1,0 +1,223 @@
+<!doctype html>
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Air Bubble</title>
+	<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+
+
+	<style type="text/css">
+		body{
+			background-image: url('dots-blue.png');
+			color: #000;
+			text-shadow: 1px 1px #fff;
+		}
+		*{
+			font-family: "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
+		}
+		#heading{
+			text-align: center;
+			width: 100%;
+			margin-top: 5px;
+			margin-bottom: 5px;
+			text-shadow:-1px -1px 0 #000,  
+			    1px -1px 0 #000,
+			    -1px 1px 0 #000,
+			     1px 1px 0 #000;
+			font-size: 30pt;
+			color: #87cefa;
+
+		}
+		#heading h1{
+			margin-top: 30px;
+			margin-bottom: 30px;
+		}
+		
+		#main-form input{
+			text-align: center;
+			margin: 0;
+		}
+		#main, #results, #connection-status{
+			text-align: center;
+			padding: 0;
+			margin: 0 auto;
+			width: 50%;
+		}
+		#results{
+			display: none;
+			border: 2px solid #87cefa;
+			border-radius: 10px;
+			background: rgba(255,255,255,0.94);
+			position: absolute;
+			top: 5%;
+			bottom: 5%;
+			width: 75%;
+			left: 12.5%;
+		}
+		.pure-control-group{
+			text-align: center;
+		}
+		.pure-control-group input{
+			text-align: center;
+			width: 100%;
+		}
+		.pure-control-group label{
+			margin-left: 0;
+			text-align: center;
+		}
+		#buttons{
+			padding-top: 10px;
+		}
+		#machine-results{
+			display: none;
+		}
+		#your-results{
+			display: none;
+		}
+		#close-results{
+			margin-top: 20px;
+		}
+
+	</style>
+	</head>
+	<body>
+		<div id="heading">
+				<h1>Air Bubble</h1>
+		</div>
+			<div id="main" class="">
+				<div id="form-container" class="">
+				<form class="pure-form pure-form-stacked" id="main-form" action="" onsubmit="return false;">
+					<fieldset>
+						<div class="pure-control-group">
+				            <label for="postcode">Postcode</label>
+				            <input id="postcode" type="text" placeholder="Eg. 7000" type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+				            >
+				        </div>
+				        <div class="pure-controls" id = "buttons">
+
+				            <button id="submit" class="pure-button pure-button-primary">Submit</button>
+				            				        	
+				        </div>
+				        <br/>
+				        OR
+				        <div class="pure-controls" id = "buttons">
+				        
+				        	<button id="auto-loc" class="pure-button pure-button-primary">Get My Location <br/> Automatically</button>
+				        </div>
+					</fieldset>
+				</form>
+			</div>
+			<div id="results">
+				<div id="machine-results">
+					<h2>Machine results:</h2>
+					<h3>Air quality for postcode: <span id="machine-postcode"></span></h3>
+					<h2 id="machine-result"></h2>
+				</div>
+				<div id="your-results">
+					<h2>Machine is busy! Here is your results:</h2>
+					<h3>Air quality for postcode: <span id="machine-postcode"></span></h3>
+					<h2 id="your-result"></h2>
+				</div>
+				
+				<button id="close-results" class="pure-button pure-button-primary">OK</button>
+			</div>
+			<div id="connection-status">No JS :(</div>
+		</div>
+		<script>
+		var url = "http://localhost:3000";
+  		
+  		var connected = false;
+
+  		function hideEl(el){
+  			el.style.display = "none";
+  		}
+  		function showEl(el){
+  			el.style.display = "inherit";
+  		}
+
+  		function postcodeReqListener(){
+  			console.log(this.responseText);
+  		}
+
+  		function positionReqListener(){
+  			console.log(this.responseText);
+  		}
+
+  		function getQualityRating(ppm){
+			// healthy, no risk
+			if(ppm > 0 & ppm < 50){
+				return 0;
+			} // only harmfult to small number of people 
+			else if (ppm > 51 && ppm < 100){
+				return 1;
+			} // unsafe for sensitive grpups
+			else if (ppm > 101 && ppm < 150){
+				return 2;
+			} // unhealthy
+			else if(ppm > 151 && ppm < 200){
+				return 3;
+			} // very bad
+			else if(ppm > 201 && ppm < 300){
+				return 4;
+			} // hazardous
+			else if (ppm > 301 && ppm < 500){
+				return 5;
+			}
+		}
+  		
+  		window.onload = function(){
+  			var connStatEl = null;
+  			var socket = io.connect(url);
+  			console.log("window loaded")
+
+  			connStatEl = document.getElementById('connection-status');
+  			var resultsDiv = document.getElementById('results');
+  			var postcodeSubmitBtn = document.getElementById('submit');
+  			var closeResBtn = document.getElementById('close-results');
+
+  			closeResBtn.onmousedown = function(e){
+  				hideEl(resultsDiv);
+  			}
+
+  			connStatEl.innerHTML = "Not connected";
+  			postcodeSubmitBtn.onmousedown = function(e){
+  				e.preventDefault();
+
+  				var postcodeVal = document.getElementById('postcode').value;
+	  			if(connected){
+	  				console.log("Getting data for postcode : " + postcodeVal);
+	  				if(postcodeVal){
+						var xhttp;
+						if (window.XMLHttpRequest) {
+							xhttp = new XMLHttpRequest();
+							} else {
+							// code for IE6, IE5
+							xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+						}
+						xhttp.addEventListener("load", postcodeReqListener);
+						xhttp.open("GET", url + "/get_airquality?postcode=" + postcodeVal);
+						xhttp.send();
+	  				}
+	  				
+				}
+  			}
+
+  			socket.on("connect", function(){
+	  			connected = true;
+	  			console.log("Connected!!");
+	  			connStatEl.innerHTML = "Connected!";
+	  		});
+
+	  		socket.on("machine-action", function(data){
+
+	  		});
+  		}
+		</script>
+		
+	</body>
+
+	
+</html>

@@ -21,9 +21,10 @@ var createDbConnection = function() {
 	mongo.connect(dbUrl).then(
 		function resolve(dbObject) {
 			dbConnection = dbObject;
-
+			requestDataPromise();
 			//Start the scheduler to fetch, parse and insert airquality data in to the db
 			schedule.scheduleJob(timeSchedule, requestDataPromise);
+
 		},
 		function reject(error) {
 			console.log('DB connection error');
@@ -45,6 +46,7 @@ var createDbConnection = function() {
 createDbConnection();
 
 var requestDataPromise= function(){
+	console.log("Requesting data..");
 	requestData(dataUrl).then(
 		function resolve(data) {
 			if( data === null) {

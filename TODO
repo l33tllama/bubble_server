@@ -1,0 +1,15 @@
+TODO:
+
+Get station closes to lat/lon
+
+get air quality at station
+
+convert to good/medium/bad rating
+
+send rating + data to bubble machine with socketio
+
+send rating + data to user if machine busy
+
+bubble machine broadcasts it's action + data (location + quality)
+
+everyone recieves the data with socket.io

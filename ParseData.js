@@ -27,6 +27,8 @@ function parseData(data) {
 				var stationName = currentLine[0].trim();
 				var pm_2_5_value = +currentLine[2];
 				var pm_10_value = +currentLine[3];
+				var lat = +currentLine[4];
+				var lon = +currentLine[5];
 				
 				//An empty line down the bottom
 				if (line === (lines.length -1)) {
@@ -36,7 +38,9 @@ function parseData(data) {
 				var currentStation = {
 					'station_name' : stationName,
 					'pm_2_5' : pm_2_5_value,
-					'pm_10' : pm_10_value
+					'pm_10' : pm_10_value,
+					'lat' : lat,
+					'lon' : lon
 				};
 			
 
