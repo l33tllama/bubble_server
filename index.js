@@ -14,7 +14,7 @@ var machineReady = false;
 // https://www.airnow.gov/
 function getQualityRating(ppm){
 	// healthy, no risk
-	if(ppm > 0 & ppm < 50){
+	if(ppm > -100 & ppm < 50){
 		return 0;
 	} // only harmfult to small number of people 
 	else if (ppm > 51 && ppm < 100){
@@ -141,6 +141,7 @@ app.get('/get_airquality', function (req, res) {
 	if(req.query.postcode != null){
 		getPostcodeLatLon(req.query.postcode, function(lat, lon){
 			getStationClosesToLatLon(lat, lon, function(stationData){
+				stationData.requestPostcode = req.query.postcode;
 				// send to machine first
 				if(machineReady){
 					io.emit('bubble-request', stationData);

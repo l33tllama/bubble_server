@@ -8,7 +8,6 @@
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 
-
 	<style type="text/css">
 		body{
 			background-image: url('dots-blue.png');
@@ -112,13 +111,13 @@
 			</div>
 			<div id="results">
 				<div id="machine-results">
-					<h2>Machine results:</h2>
+					<h2>Machine's results:</h2>
 					<h3>Air quality for postcode: <span id="machine-postcode"></span></h3>
 					<h2 id="machine-result"></h2>
 				</div>
 				<div id="your-results">
 					<h2>Machine is busy! Here is your results:</h2>
-					<h3>Air quality for postcode: <span id="machine-postcode"></span></h3>
+					<h3>Air quality for postcode: <span id="your-postcode"></span></h3>
 					<h2 id="your-result"></h2>
 				</div>
 				
@@ -128,6 +127,13 @@
 		</div>
 		<script>
 		var url = "http://localhost:3000";
+		var resYourPostcode;
+		var resOtherPostcode;
+		var resOtherResult;
+		var resYourResult;
+		var resultsDiv;
+		var machineResults;
+		var yourResults;
   		
   		var connected = false;
 
@@ -138,8 +144,42 @@
   			el.style.display = "inherit";
   		}
 
+  		function getRatingText(ppm){
+  			var outputMsg = "";
+  			switch(getQualityRating(ppm)){
+  				case 0:
+  					outputMsg ="Good! " + ppm + "PPM";
+  					break;
+  				case 1:
+  					outputMsg ="Could be better! " + ppm + "PPM";
+  					break;
+  				case 2:
+  					outputMsg ="Unsafe for some! " + ppm + "PPM";
+  					break;
+  				case 3:
+  					outputMsg ="Unhealthy! " + ppm + "PPM";
+  					break;
+  				case 4:
+  					outputMsg ="Very bad!!! " + ppm + "PPM";
+  					break;
+  				case 5:
+  					outputMsg ="Hazardous!!!! " + ppm + "PPM";
+  					break;
+  			}
+  			return outputMsg;
+  		}
+
   		function postcodeReqListener(){
-  			console.log(this.responseText);
+  			var data = JSON.parse(this.responseText);
+  			//console.log(data);
+  			var reqPostcode = data.requestPostcode;
+  			//console.log(data.pm_2_5);
+  			
+  			resYourPostcode.innerHTML = reqPostcode;
+  			resYourResult.innerHTML = getRatingText(data.pm_2_5);
+  			
+  			showEl(resultsDiv);
+  			showEl(yourResults);
   		}
 
   		function positionReqListener(){
@@ -148,7 +188,7 @@
 
   		function getQualityRating(ppm){
 			// healthy, no risk
-			if(ppm > 0 & ppm < 50){
+			if(ppm > -100 & ppm < 50){
 				return 0;
 			} // only harmfult to small number of people 
 			else if (ppm > 51 && ppm < 100){
@@ -174,9 +214,15 @@
   			console.log("window loaded")
 
   			connStatEl = document.getElementById('connection-status');
-  			var resultsDiv = document.getElementById('results');
+  			resultsDiv = document.getElementById('results');
   			var postcodeSubmitBtn = document.getElementById('submit');
   			var closeResBtn = document.getElementById('close-results');
+  			resYourPostcode = document.getElementById('your-postcode');
+			resOtherPostcode = document.getElementById('machine-postcode');
+			resOtherResult = document.getElementById('machine-postcode');
+			resYourResult = document.getElementById('your-result');
+			machineResults = document.getElementById('machine-results');
+			yourResults = document.getElementById('your-results');
 
   			closeResBtn.onmousedown = function(e){
   				hideEl(resultsDiv);
@@ -211,8 +257,14 @@
 	  			connStatEl.innerHTML = "Connected!";
 	  		});
 
-	  		socket.on("machine-action", function(data){
-
+	  		socket.on("machine-active", function(data){
+	  			var reqPostcode = data.requestPostcode;
+	  			
+	  			resMachinePostcode.innerHTML = reqPostcode;
+	  			resMachineResult.innerHTML = getRatingText(data.pm_2_5);
+	  			
+	  			showEl(resultsDiv);
+	  			showEl(machineResults);
 	  		});
   		}
 		</script>
